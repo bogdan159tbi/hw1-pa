@@ -6,13 +6,11 @@ import java.util.StringTokenizer;
 
 public class Valley {
     static class Task {
-        public final static String INPUT_FILE = "valley.in";
+        public final static String INPUT_FILE = "/home/bogdan/Desktop/pa/hw-gigel/public_tests/valley/input/5-valley.in";
         public final static String OUTPUT_FILE = "valley.out";
 
-        int stocks, fiat, maxLoss;
-        int[] price;
-        int[] minPrice;
-        int[] maxPrice;
+        int nr;
+        int [] heights;
 
         public void solve() {
             readInput();
@@ -26,20 +24,13 @@ public class Valley {
                         new InputStreamReader(file)
                 );
                 StringTokenizer st = new StringTokenizer(br.readLine());
-                stocks = Integer.parseInt(st.nextToken());
-                fiat = Integer.parseInt(st.nextToken());
-                maxLoss = Integer.parseInt(st.nextToken());
-                price = new int[stocks];
-                minPrice = new int[stocks];
-                maxPrice = new int[stocks];
-                for (int i = 0; i < stocks; i++) {
-                    String pair = br.readLine();
-                    String[] val = pair.split(" ");
-                    price[i] = Integer.parseInt(val[0]);
-                    minPrice[i] = Integer.parseInt(val[1]);
-                    maxPrice[i] = Integer.parseInt(val[2]);
+                nr = Integer.parseInt(st.nextToken());
+                heights = new int[nr];
+                String pair = br.readLine();
+                String[] val = pair.split(" ");
+                for (int i = 0 ; i < nr ;i++) {
+                    heights[i] = Integer.parseInt(val[i]);
                 }
-
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -55,9 +46,45 @@ public class Valley {
             }
         }
 
-
         private int getResult() {
-            return 0;
+            int minValue = heights[0];
+            for(int i = 1 ; i < nr; i++){
+                if(minValue > heights[i]){
+                    minValue = heights[i];
+                }
+            }
+            int index = 1, hours = 0;
+            for(int i = 0 ; i <= nr -1 ;i++){
+                if(minValue >=  heights[i]){
+                    minValue = heights[i];
+                    index = i;
+                }
+            }
+            //cum aveam inainte
+            //daca index == 1 si tre sa iau prefix sau sufix doar 2
+            //si calc min intre indicii 1 si nr -1
+            //modificam de la stanga la dreapta pt sufix
+
+            //daca avem sir crescator / descrescator
+            if(index == 0){
+                index += 1;
+            }
+            for(int i = 1 ;i <= index;i++){
+                if(heights[i] > heights[i-1]) {
+                    hours += heights[i] - heights[i-1];
+                    heights[i] = heights[i-1];
+                }
+            }
+            if(index == nr -1){
+                index -= 1;
+            }
+            for(int i = nr - 2 ; i >= index  ; i--){
+                if(heights[i] > heights[i+1] ){
+                    hours += heights[i-1] - heights[i];
+                    heights[i] = heights[i + 1];
+                }
+            }
+            return hours;
         }
 
 
